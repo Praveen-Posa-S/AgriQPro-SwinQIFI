@@ -26,9 +26,21 @@ st.write("Upload a Betel Vine leaf image to detect diseases using the SwinV2 + Q
 
 @st.cache_resource
 def load_model(checkpoint_path, num_classes):
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cpu") # Quantized models typically run on CPU
     # Initialize model with correct parameters (img_size=224, window_size=7)
     model = AgriQPro(num_classes=num_classes, backbone_name='swinv2_tiny_window8_256')
+    
+    # Apply dynamic quantization structure if loading a quantized model
+    if "quantized" in checkpoint_path or "quantize" in checkpoint_path:
+        model.qifi1 = torch.quantization.quantize_dynamic(
+            model.qifi1, {nn.Linear}, dtype=torch.qint8
+        )
+        model.qifi2 = torch.quantization.quantize_dynamic(
+            model.qifi2, {nn.Linear}, dtype=torch.qint8
+        )
+        model.mlp_head = torch.quantization.quantize_dynamic(
+            model.mlp_head, {nn.Linear}, dtype=torch.qint8
+        )
     
     if os.path.exists(checkpoint_path):
         checkpoint = torch.load(checkpoint_path, map_location=device)
@@ -37,7 +49,7 @@ def load_model(checkpoint_path, num_classes):
         else:
             model.load_state_dict(checkpoint)
     else:
-        st.error(f"Checkpoint not found at {checkpoint_path}. Please train the model first.")
+        st.error(f"Checkpoint not found at {checkpoint_path}. Please ensure the model file exists.")
         return None
     
     model.to(device)
@@ -55,11 +67,34 @@ def preprocess_image(image):
 
 # Sidebar
 st.sidebar.header("Model Settings")
-checkpoint_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "checkpoints")
-checkpoint_path = st.sidebar.text_input("Checkpoint Path", os.path.join("checkpoints", "best_model.pth"))
+
+# Determine default checkpoint path for deployment
+# Prioritize 'models/best_model_quantized.pth' as per user request
+default_ckpt_path = "models/best_model_quantized.pth"
+
+# If not found directly, check relative to script or fallback to checkpoints
+if not os.path.exists(default_ckpt_path):
+    # Check relative to script
+    alt_path_1 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "models", "best_model_quantized.pth")
+    # Check standard checkpoints location
+    alt_path_2 = "checkpoints/best_model.pth"
+    alt_path_3 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "checkpoints", "best_model.pth")
+    
+    if os.path.exists(alt_path_1):
+        default_ckpt_path = alt_path_1
+    elif os.path.exists(alt_path_2):
+        default_ckpt_path = alt_path_2
+    elif os.path.exists(alt_path_3):
+        default_ckpt_path = alt_path_3
+
+checkpoint_path = st.sidebar.text_input("Checkpoint Path", default_ckpt_path)
 
 # Load Model
 model = load_model(checkpoint_path, len(CLASSES))
+
+if model is None:
+    st.warning(f"Project Root: {os.getcwd()}")
+    st.warning("Please ensure the 'checkpoints' folder is in the project root or provide the correct absolute path.")
 
 # Input
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])

@@ -108,8 +108,16 @@ streamlit run Trail1/app.py
 ```
 
 - Upload an image (JPG/PNG).
-- Specify the checkpoint path (default: `checkpoints/best_model.pth`).
+- Specify the checkpoint path. The app defaults to `models/best_model_quantized.pth` for deployment.
 - View the predicted class and confidence score.
+
+### 5. Deployment
+
+To deploy the application (e.g., to GitHub/Streamlit Cloud):
+1. Ensure the `models/` directory contains `best_model_quantized.pth`.
+2. The `checkpoints/` folder is typically ignored in `.gitignore`, but ensure `models/best_model_quantized.pth` is tracked.
+3. Push the repository to GitHub.
+4. Connect to Streamlit Cloud and deploy!
 
 ## Benchmark Results
 
