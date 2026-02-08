@@ -1,5 +1,11 @@
 # AgriQPro - Quantum-Driven Precision Optimization for Smart Agriculture
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white_white.svg)](https://agriqpro.streamlit.app/)
+
+🚀 **Live Demo**: Experience the model in action at [agriqpro.streamlit.app](https://agriqpro.streamlit.app/)
+
+> **Dataset Access**: The dataset used in this research is available upon request. Please contact **[srinivaspraveen043@gmail.com](mailto:srinivaspraveen043@gmail.com)** for access.
+
 This repository contains the implementation of a plant disease classification system based on the research paper **"AgriQPro"**. The system utilizes a **Swin Transformer V2** backbone enhanced with a **Quantum-Inspired Feature Interference (QIFI)** module for improved feature refinement and classification accuracy.
 
 ## Features
