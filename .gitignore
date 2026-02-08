@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
+
+# Environments
+venv/
+.env/
+
+# Checkpoints
+checkpoints/*.pth
+
+# Datasets (local / Google Drive)
+Datasets/
+Test_Dataset/
+data/
+*.zip
+*.rar

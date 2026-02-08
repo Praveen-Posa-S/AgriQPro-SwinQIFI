@@ -1,0 +1,24 @@
+Accuracy: 0.9879
+F1 Score (Weighted): 0.9879
+
+Classification Report:
+                           precision    recall  f1-score   support
+
+   Bacterial Leaf Disease       0.99      0.99      0.99       400
+               Dried Leaf       1.00      1.00      1.00       400
+Fungal Brown Spot Disease       0.99      0.99      0.99       400
+             Healthy_Leaf       0.98      0.98      0.98       400
+                 Leaf_Rot       0.98      1.00      0.99       400
+                Leaf_Spot       0.98      0.96      0.97       400
+
+                 accuracy                           0.99      2400
+                macro avg       0.99      0.99      0.99      2400
+             weighted avg       0.99      0.99      0.99      2400
+
+Confusion Matrix:
+[[396   0   2   2   0   0]
+ [  0 400   0   0   0   0]
+ [  2   0 398   0   0   0]
+ [  0   0   0 392   0   8]
+ [  0   0   0   0 399   1]
+ [  0   0   0   5   9 386]]
